@@ -7,6 +7,14 @@ parameters:
     cache_adapter: cache.adapter.apcu
     locale: 'en'
     uploads_base_url: '%env(SITE_BASE_URL)%/uploads'
+      #In Symfony 5.1, instead of setting these 2 parameters, you can set 1 new piece of config:
+      # config/packages/routing.yaml
+      #framework:
+      #    router:
+      #        # ...
+      #        default_uri: 'https://example.org/my/path/'
+    router.request_context.scheme: '%env(SITE_BASE_SCHEME)%'
+    router.request_context.host: '%env(SITE_BASE_HOST)%'
 
 services:
     # default configuration for services in *this* file
