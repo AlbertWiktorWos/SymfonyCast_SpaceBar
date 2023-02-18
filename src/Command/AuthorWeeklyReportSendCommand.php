@@ -4,13 +4,11 @@ namespace App\Command;
 
 use App\Repository\ArticleRepository;
 use App\Repository\UserRepository;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use App\Service\Mailer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\NamedAddress;
 
 class AuthorWeeklyReportSendCommand extends Command
 {
@@ -20,7 +18,17 @@ class AuthorWeeklyReportSendCommand extends Command
     private $articleRepository;
     private $mailer;
 
-    public function __construct(UserRepository $userRepository, ArticleRepository $articleRepository, MailerInterface $mailer)
+    /**
+     * AuthorWeeklyReportSendCommand constructor.
+     * @param UserRepository $userRepository
+     * @param ArticleRepository $articleRepository
+     * @param Mailer $mailer
+     */
+    public function __construct(
+        UserRepository $userRepository,
+        ArticleRepository $articleRepository,
+        Mailer $mailer
+    )
     {
         parent::__construct(null);
         $this->userRepository = $userRepository;
@@ -60,19 +68,10 @@ class AuthorWeeklyReportSendCommand extends Command
             if (count($articles) === 0) {
                 continue;
             }
-            /**
-             * Duplicated
-             */
-            $email = (new TemplatedEmail())
-                ->from(new NamedAddress('alienmailcarrier@example.com', 'The Space Bar'))
-                ->to(new NamedAddress($author->getEmail(), $author->getFirstName()))
-                ->subject('Your weekly report on the Space Bar!')
-                ->htmlTemplate('email/author-weekly-report.html.twig')
-                ->context([ //additional vars that we will use in template
-                    'author' => $author,
-                    'articles' => $articles,
-                ]);
-            $this->mailer->send($email);
+
+            //we use our mailer service to send emails
+            $this->mailer->sendAuthorWeeklyReportMessage($author, $articles);
+
         }
         // we finished our bar
         $io->progressFinish();

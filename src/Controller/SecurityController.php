@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\Model\UserRegistrationFormModel;
 use App\Form\UserRegistrationFormType;
 use App\Security\LoginFormAuthenticator;
+use App\Service\Mailer;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,7 +51,7 @@ class SecurityController extends AbstractController
      * @Route("/register", name="app_register")
      */
     public function register(
-        MailerInterface $mailer, //interface to configure and send our email
+        Mailer $mailer, //our service to send emails
         Request $request,
         UserPasswordEncoderInterface $passwordEncoder,
         GuardAuthenticatorHandler $guardHandler,
@@ -81,26 +82,7 @@ class SecurityController extends AbstractController
             $em->persist($user);
             $em->flush();
 
-            /**
-             * Prepare email to send
-             */
-            $email = (new TemplatedEmail()) //or just Email() if we dont use template
-                 //or we can use Address (4.4 and higer), and more addreses in array if we want to
-                // ->from('alienmailcarrier@example.com') // from which email we send the mail  //todo in future versions use Address!
-                ->from(new NamedAddress('alienmailcarrier@example.com', 'The Space Bar'))// from which email we send the mail
-                //->to($user->getEmail()) //user email - or we can use Address (4.4 and higer), and more addreses in array if we want to
-                ->to(new NamedAddress($user->getEmail(), $user->getFirstName())) //user email //todo in future versions use Address!
-                ->subject('Welcome to the Space Bar!') // subject of our email
-                ->htmlTemplate('email/welcome.html.twig')
-                ->context([
-                    'user' => $user,
-                ]);
-                /*
-                ->html("Nice to meet you {$user->getFirstName()}! ❤️") //usefull if we use Email()
-                ->text("Nice to meet you {$user->getFirstName()}! ❤️");
-                */
-
-            $mailer->send($email);
+            $mailer->sendWelcomeMessage($user);
 
             return $guardHandler->authenticateUserAndHandleSuccess(
                 $user,

@@ -1,4 +1,9 @@
 # Symfony Mailer: Love Sending Emails Again
+## [18.02.2022]
+- Organizing Emails Logic into a Service
+- Styling PDFs with CSS
+- Lets Generate a PDF!
+- PDF: Snappy, wkhtmltopdf & Template Setup
 ## [17.02.2022]
 - Router Request Context: Fix Paths in the CLI
 - Using a Base Email Template

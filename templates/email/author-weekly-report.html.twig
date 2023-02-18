@@ -12,13 +12,7 @@
     </row>
     <row>
         <columns>
-            {% for article in articles %}
-                <tr>
-                    <td>{{ loop.index }}</td>
-                    <td>{{ article.title }}</td>
-                    <td>{{ article.comments|length }}</td>
-                </tr>
-            {% endfor %}
+            {{ include('email/_report-table.html.twig') }}
         </columns>
     </row>
     <row>
