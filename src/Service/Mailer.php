@@ -38,7 +38,7 @@ class Mailer
 
     }
 
-    public function sendWelcomeMessage(User $user){
+    public function sendWelcomeMessage(User $user): TemplatedEmail{
 
         /**
          * Prepare email to send
@@ -60,9 +60,11 @@ class Mailer
         */
 
         $this->mailer->send($email);
+
+        return $email;
     }
 
-    public function sendAuthorWeeklyReportMessage(User $author, array $articles){
+    public function sendAuthorWeeklyReportMessage(User $author, array $articles): TemplatedEmail{
 
         // render html from twig
         $html = $this->twig->render('email/author-weekly-report-pdf.html.twig', [
@@ -85,5 +87,7 @@ class Mailer
             ])
             ->attach($pdf, sprintf('weekly-report-%s.pdf', date('Y-m-d'))); //attach the pdfs file with name
         $this->mailer->send($email);
+
+        return $email;
     }
 }

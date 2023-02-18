@@ -4,7 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    cache_adapter: cache.adapter.apcu
+    cache_adapter: cache.adapter.apcu  #we use filesystem in dev env (we dont need an APCU)
     locale: 'en'
     uploads_base_url: '%env(SITE_BASE_URL)%/uploads'
       #In Symfony 5.1, instead of setting these 2 parameters, you can set 1 new piece of config:

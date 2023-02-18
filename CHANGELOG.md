@@ -1,5 +1,10 @@
 # Symfony Mailer: Love Sending Emails Again
 ## [18.02.2022]
+- Email Delivery & Assertions in Tests
+- Functional Testing with Emails
+- Integration Testing Emails
+- PHPUnit with phpunit.phar - use in PHPStorm
+- Unit Testing our Emails
 - Organizing Emails Logic into a Service
 - Styling PDFs with CSS
 - Lets Generate a PDF!
