@@ -33,6 +33,7 @@
         "symfony/property-access": "4.3.*",
         "symfony/property-info": "4.3.*",
         "symfony/security-bundle": "^4.0",
+        "symfony/sendgrid-mailer": "4.3.*",
         "symfony/serializer": "4.3.*",
         "symfony/twig-bundle": "^4.0",
         "symfony/validator": "^4.0",

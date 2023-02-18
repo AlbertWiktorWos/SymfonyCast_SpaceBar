@@ -1,5 +1,7 @@
 # Symfony Mailer: Love Sending Emails Again
 ## [18.02.2022]
+- Production Settings with SendGrid
+- SendGrid & All About Transports
 - Email Delivery & Assertions in Tests
 - Functional Testing with Emails
 - Integration Testing Emails
