@@ -46,7 +46,7 @@ class Mailer
         $email = (new TemplatedEmail()) //or just Email() if we dont use template
         //or we can use Address (4.4 and higer), and more addreses in array if we want to
         // ->from('alienmailcarrier@example.com') // from which email we send the mail  //todo in future versions use Address!
-        ->from(new NamedAddress('mescruu@gmail.com', 'The Space Bar'))// from which email we send the mail
+        //->from(new NamedAddress('mescruu@gmail.com', 'The Space Bar'))// from which email we send the mail (now we added this in SetFromListener
         //->to($user->getEmail()) //user email - or we can use Address (4.4 and higer), and more addreses in array if we want to
         ->to(new NamedAddress($user->getEmail(), $user->getFirstName())) //user email //todo in future versions use Address!
         ->subject('Welcome to the Space Bar!') // subject of our email
@@ -77,7 +77,7 @@ class Mailer
          * Duplicated
          */
         $email = (new TemplatedEmail())
-            ->from(new NamedAddress('alienmailcarrier@example.com', 'The Space Bar'))
+            //->from(new NamedAddress('mescruu@gmail.com', 'The Space Bar'))// from which email we send the mail (now we added this in SetFromListener
             ->to(new NamedAddress($author->getEmail(), $author->getFirstName()))
             ->subject('Your weekly report on the Space Bar!')
             ->htmlTemplate('email/author-weekly-report.html.twig')

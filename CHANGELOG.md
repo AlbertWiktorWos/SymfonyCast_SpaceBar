@@ -1,4 +1,8 @@
 # Symfony Mailer: Love Sending Emails Again
+## [19.02.2022]
+- Setting "From" Globally
+- Events & Overriding "Recipients"
+- Sender Authentication: SPF & DKIM
 ## [18.02.2022]
 - Production Settings with SendGrid
 - SendGrid & All About Transports
