@@ -1,4 +1,5 @@
-{% apply inky_to_html|inline_css(source('@styles/foundation-emails.css'), source('@styles/email.css')) %}
+{#{% apply inky_to_html|inline_css(source('@styles/foundation-emails.css'), source('@styles/email.css')) %} old way without using scss!#}
+{% apply inky_to_html|inline_css(encore_entry_css_source('email')) %} {# now we using scss #}
 
     <container>
         <row class="header">

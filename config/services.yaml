@@ -31,6 +31,7 @@ services:
             $isDebug: '%kernel.debug%'
             $uploadsFilesystem: '@oneup_flysystem.uploads_filesystem_filesystem'
             $uploadedAssetsBaseUrl: '%uploads_base_url%'
+            string $publicDir: '%kernel.project_dir%/public' #we need public directory to pass it to the twig extension to get our css files prepared by encore @see src/Twig/AppExtension.php
 
     # custom aliases for autowiring
     Nexy\Slack\Client: '@nexy_slack.client'

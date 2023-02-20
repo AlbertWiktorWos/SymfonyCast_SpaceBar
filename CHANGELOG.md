@@ -1,5 +1,7 @@
 # Symfony Mailer: Love Sending Emails Again
 ## [20.02.2022]
+- Processing Encore Files through inline_css()
+- Styling Emails with Encore & Sass Part 1
 - Attachments with Async Messenger Emails
 - Async Emails with Messenger
 ## [19.02.2022]
