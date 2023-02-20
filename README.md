@@ -59,7 +59,8 @@ set `prod` to omptimized for speed and hides exception messages
 to set this env we need to change APP_ENV variable in .env
 
 ##Testing email
-* visti https://mailtrap.io/
+* visit https://mailtrap.io/
+* visit https://sendgrid.com/
 
 ## Database fast scripts
 * `symfony console doctrine:database:drop --force`

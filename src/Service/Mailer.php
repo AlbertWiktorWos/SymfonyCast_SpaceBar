@@ -74,8 +74,11 @@ class Mailer
         $this->entrypointLookup->reset(); //we force encore to forget that he render something and try to render once again
 
         /**
-         * Duplicated
+         * If we use a messanger we have to put this in real file, because we cant store content in database (until symfony 4.4)
          */
+        $path = __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'var'.DIRECTORY_SEPARATOR.'tmpemailsattachments'.DIRECTORY_SEPARATOR.uniqid('tempemailpdf'). '.pdf';
+        file_put_contents($path, $pdf);
+
         $email = (new TemplatedEmail())
             //->from(new NamedAddress('mescruu@gmail.com', 'The Space Bar'))// from which email we send the mail (now we added this in SetFromListener
             ->to(new NamedAddress($author->getEmail(), $author->getFirstName()))
@@ -85,9 +88,13 @@ class Mailer
                 'author' => $author,
                 'articles' => $articles,
             ])
-            ->attach($pdf, sprintf('weekly-report-%s.pdf', date('Y-m-d'))); //attach the pdfs file with name
+            //->attach($pdf, sprintf('weekly-report-%s.pdf', date('Y-m-d'))); //attach the pdfs file with name, but we want to attach with path because we store it in the messenger now
+            ->attachFromPath($path, sprintf('weekly-report-%s.pdf', date('Y-m-d'))); //in symfony 4.4 it should work in way above
         $this->mailer->send($email);
 
+        /** TODO
+         *  in symfony 4.4 create listener to catch a WorkerStoppedEvent, and remove attachments in tmpemailsattachments temporary dir
+         */
         return $email;
     }
 }

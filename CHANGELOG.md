@@ -1,4 +1,7 @@
 # Symfony Mailer: Love Sending Emails Again
+## [20.02.2022]
+- Attachments with Async Messenger Emails
+- Async Emails with Messenger
 ## [19.02.2022]
 - Setting "From" Globally
 - Events & Overriding "Recipients"
