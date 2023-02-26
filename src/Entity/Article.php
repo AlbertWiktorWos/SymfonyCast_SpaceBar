@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\CommentRepository;
+use App\Service\UploaderHelper;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -182,9 +183,15 @@ class Article
         return $this;
     }
 
+    /**
+     * We get path to image in some directory - without adding for exmaple an uploads/ prefix
+     * @return string
+     */
     public function getImagePath()
     {
-        return 'images/'.$this->getImageFilename();
+       // return 'uploads/article_image/'.$this->getImageFilename();
+       // return 'images/'.$this->getImageFilename();
+        return UploaderHelper::ARTICLE_IMAGE.'/'.$this->getImageFilename();
     }
 
     /**

@@ -20,6 +20,7 @@ services:
         bind:
             $markdownLogger: '@monolog.logger.markdown'
             $isDebug: '%kernel.debug%'
+            $uploadsPath: '%kernel.project_dir%/public/uploads' #we have to pass it to our UploaderHelper
 
     # custom aliases for autowiring
     Nexy\Slack\Client: '@nexy_slack.client'
@@ -43,3 +44,6 @@ services:
         tags:
             - { name: form.type_extension,
                 extended_type: Symfony\Component\Form\Extension\Core\Type\TextareaType }
+
+    #service to handle the subfolder of our site to get proper directory of uploaded files @see UploaderHelper
+    Symfony\Component\Asset\Context\RequestStackContext: '@assets.context'

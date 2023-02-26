@@ -2,7 +2,14 @@
     {{ form_row(articleForm.title, {
         label: 'Article title'
     }) }}
-    {{ form_row(articleForm.imageFile) }} {# We added not existed in entity parameter because we handle this on our owns #}
+
+    {{ form_start(articleForm) }}
+        {{ form_row(articleForm.imageFile, {
+            attr: {
+                'placeholder': 'Select an article image'
+            }
+     }) }} {# We added not existed in entity parameter because we handle this on our owns #}
+
     {{ form_row(articleForm.author) }}
     {{ form_row(articleForm.location, {
         attr: {
