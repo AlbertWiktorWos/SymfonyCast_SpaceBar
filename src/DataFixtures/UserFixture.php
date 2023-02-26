@@ -27,9 +27,6 @@ class UserFixture extends BaseFixture
             if ($this->faker->boolean) {
                 $user->setTwitterUsername($this->faker->userName);
             }
-            if ($this->faker->boolean(75)) {
-                $user->setSubscribeToNewsletter(true);
-            }
 
             $user->setPassword($this->passwordEncoder->encodePassword(
                 $user,

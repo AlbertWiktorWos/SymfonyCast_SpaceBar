@@ -3,10 +3,8 @@
 namespace App\Twig;
 
 use App\Service\MarkdownHelper;
-use App\Service\UploaderHelper;
 use Psr\Container\ContainerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
-use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -15,20 +13,9 @@ class AppExtension extends AbstractExtension implements ServiceSubscriberInterfa
 {
     private $container;
 
-    private $publicDir;
-
-    public function __construct(ContainerInterface $container, string $publicDir)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-        $this->publicDir = $publicDir;
-    }
-
-    public function getFunctions(): array
-    {
-        return [
-            new TwigFunction('uploaded_asset', [$this, 'getUploadedAssetPath']),
-            new TwigFunction('encore_entry_css_source', [$this, 'getEncoreEntryCssSource'])
-        ];
     }
 
     public function getFilters(): array
@@ -45,42 +32,10 @@ class AppExtension extends AbstractExtension implements ServiceSubscriberInterfa
             ->parse($value);
     }
 
-    public function getUploadedAssetPath(string $path): string
-    {
-        return $this->container
-            ->get(UploaderHelper::class)
-            ->getPublicPath($path);
-    }
-
-    /**
-     * Get the source of our files with cssa
-     * @param string $entryName
-     * @return string
-     */
-    public function getEncoreEntryCssSource(string $entryName): string
-    {
-
-        // @see \public\build\entrypoints.json (we get our classes from this entrypoints.json and get CssFiles
-        $entryPointLookupInterface = $this->container->get(EntrypointLookupInterface::class);
-
-        // To avoid missing CSS if you send your emails via Messenger (or if you send multiple emails during the same request),
-        // "reset" Encore's internal cache before calling getCssFiles():
-        $entryPointLookupInterface->reset();
-        $files = $entryPointLookupInterface->getCssFiles($entryName);
-
-        $source = '';
-        foreach ($files as $file) {
-            $source .= file_get_contents($this->publicDir.'/'.$file);
-        }
-        return $source;
-    }
-
     public static function getSubscribedServices()
     {
         return [
             MarkdownHelper::class,
-            UploaderHelper::class,
-            EntrypointLookupInterface::class, // we added our service to get Entrypoints
         ];
     }
 }

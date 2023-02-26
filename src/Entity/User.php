@@ -71,11 +71,6 @@ class User implements UserInterface
      */
     private $agreedTermsAt;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $subscribeToNewsletter = false;
-
     public function __construct()
     {
         $this->apiTokens = new ArrayCollection();
@@ -270,15 +265,5 @@ class User implements UserInterface
     public function agreeToTerms()
     {
         $this->agreedTermsAt = new \DateTime();
-    }
-
-    public function isSubscribeToNewsletter()
-    {
-        return $this->subscribeToNewsletter;
-    }
-
-    public function setSubscribeToNewsletter(bool $subscribeToNewsletter)
-    {
-        $this->subscribeToNewsletter = $subscribeToNewsletter;
     }
 }

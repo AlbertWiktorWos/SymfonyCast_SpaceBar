@@ -6,14 +6,8 @@ use App\Entity\User;
 use App\Form\Model\UserRegistrationFormModel;
 use App\Form\UserRegistrationFormType;
 use App\Security\LoginFormAuthenticator;
-use App\Service\Mailer;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Address;
-use Symfony\Component\Mime\Email;
-use Symfony\Component\Mime\NamedAddress;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
@@ -47,16 +41,9 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * This is a very traditional controller: it creates a Symfony form, processes it, saves a new User object to the database and ultimately redirects when it finishes.
      * @Route("/register", name="app_register")
      */
-    public function register(
-        Mailer $mailer, //our service to send emails
-        Request $request,
-        UserPasswordEncoderInterface $passwordEncoder,
-        GuardAuthenticatorHandler $guardHandler,
-        LoginFormAuthenticator $formAuthenticator
-    )
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, LoginFormAuthenticator $formAuthenticator)
     {
         $form = $this->createForm(UserRegistrationFormType::class);
         $form->handleRequest($request);
@@ -66,7 +53,6 @@ class SecurityController extends AbstractController
             $userModel = $form->getData();
 
             $user = new User();
-            $user->setFirstName($userModel->firstName);
             $user->setEmail($userModel->email);
             $user->setPassword($passwordEncoder->encodePassword(
                 $user,
@@ -76,13 +62,10 @@ class SecurityController extends AbstractController
             if (true === $userModel->agreeTerms) {
                 $user->agreeToTerms();
             }
-            $user->setSubscribeToNewsletter($userModel->subscribeToNewsletter);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
-
-            $mailer->sendWelcomeMessage($user);
 
             return $guardHandler->authenticateUserAndHandleSuccess(
                 $user,

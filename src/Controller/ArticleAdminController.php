@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Article;
 use App\Form\ArticleFormType;
 use App\Repository\ArticleRepository;
-use App\Service\UploaderHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Gedmo\Sluggable\Util\Urlizer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -21,7 +20,7 @@ class ArticleAdminController extends BaseController
      * @Route("/admin/article/new", name="admin_article_new")
      * @IsGranted("ROLE_ADMIN_ARTICLE")
      */
-    public function new(EntityManagerInterface $em, Request $request, UploaderHelper $uploaderHelper)
+    public function new(EntityManagerInterface $em, Request $request)
     {
         $form = $this->createForm(ArticleFormType::class);
 
@@ -29,14 +28,6 @@ class ArticleAdminController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Article $article */
             $article = $form->getData();
-
-            /** @var UploadedFile $uploadedFile */
-            $uploadedFile = $form['imageFile']->getData();
-
-            if ($uploadedFile) {
-                $newFilename = $uploaderHelper->uploadArticleImage($uploadedFile, $article->getImageFilename());
-                $article->setImageFilename($newFilename);
-            }
 
             $em->persist($article);
             $em->flush();
@@ -55,7 +46,7 @@ class ArticleAdminController extends BaseController
      * @Route("/admin/article/{id}/edit", name="admin_article_edit")
      * @IsGranted("MANAGE", subject="article")
      */
-    public function edit(Article $article, Request $request, EntityManagerInterface $em, UploaderHelper $uploaderHelper)
+    public function edit(Article $article, Request $request, EntityManagerInterface $em)
     {
         $form = $this->createForm(ArticleFormType::class, $article, [
             'include_published_at' => true
@@ -63,13 +54,21 @@ class ArticleAdminController extends BaseController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+
             /** @var UploadedFile $uploadedFile */
-            $uploadedFile = $form['imageFile']->getData();
+            $uploadedFile = $form['imageFile']->getData(); // get data from imageFile field from
             if ($uploadedFile) {
-                $newFilename = $uploaderHelper->uploadArticleImage($uploadedFile, $article->getImageFilename());
+                $destination = $this->getParameter('kernel.project_dir') . '/public/uploads/article_image';
+                $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+                //Urlizer: this comes from the gedmo/doctrine-extensions library.  it added a "-" instead of spaces and more
+                $newFilename = Urlizer::urlize($originalFilename) . '-' . uniqid() . '.' . $uploadedFile->guessExtension();//unique string + oryginal name of file
+                // we move file to specyfic destination with specific name
+                $uploadedFile->move(
+                    $destination,
+                    $newFilename
+                );
                 $article->setImageFilename($newFilename);
             }
-
             $em->persist($article);
             $em->flush();
 
@@ -81,9 +80,29 @@ class ArticleAdminController extends BaseController
         }
 
         return $this->render('article_admin/edit.html.twig', [
-            'articleForm' => $form->createView(),
-            'article' => $article,
+            'articleForm' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/admin/upload/test", name="upload_test")
+     */
+    public function temporaryUploadAction(Request $request)
+    {
+
+        /** @var UploadedFile $uploadedFile */
+        $uploadedFile = $request->files->get('image');
+        $destination = $this->getParameter('kernel.project_dir').'/public/uploads';
+
+        $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+        //Urlizer: this comes from the gedmo/doctrine-extensions library.  it added a "-" instead of spaces and more
+        $newFilename = Urlizer::urlize($originalFilename).'-'.uniqid().'.'.$uploadedFile->guessExtension();//unique string + oryginal name of file
+
+        dd($uploadedFile->move(
+            $destination,
+            $newFilename
+        ));
+       // dd($request->files->get('image')); //name attribute in field in template
     }
 
     /**

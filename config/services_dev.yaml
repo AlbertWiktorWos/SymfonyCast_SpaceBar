@@ -1,11 +1,2 @@
 parameters:
-    cache_adapter: 'cache.adapter.filesystem' #we use filesystem in dev env (we dont need an APCU)
-services:
-    _defaults:
-        autowire: true
-        autoconfigure: true # Symfony will configure EnvelopeListener as an event subscriber.
-#Service with Listener that send emails
-    Symfony\Component\Mailer\EventListener\EnvelopeListener:
-        arguments:
-            - null #sender
-            - ['%env(DEV_MAIL_RECIPIENT)%'] #recipiens
+    cache_adapter: 'cache.adapter.filesystem'

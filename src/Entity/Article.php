@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\CommentRepository;
-use App\Service\UploaderHelper;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -87,17 +86,10 @@ class Article
      */
     private $specificLocationName;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\ArticleReference", mappedBy="article")
-     * @ORM\OrderBy({"position"="ASC"})
-     */
-    private $articleReferences;
-
     public function __construct()
     {
         $this->comments = new ArrayCollection();
         $this->tags = new ArrayCollection();
-        $this->articleReferences = new ArrayCollection();
     }
 
     public function getId()
@@ -192,7 +184,7 @@ class Article
 
     public function getImagePath()
     {
-        return UploaderHelper::ARTICLE_IMAGE.'/'.$this->getImageFilename();
+        return 'images/'.$this->getImageFilename();
     }
 
     /**
@@ -312,13 +304,5 @@ class Article
         $this->specificLocationName = $specificLocationName;
 
         return $this;
-    }
-
-    /**
-     * @return Collection|ArticleReference[]
-     */
-    public function getArticleReferences(): Collection
-    {
-        return $this->articleReferences;
     }
 }
