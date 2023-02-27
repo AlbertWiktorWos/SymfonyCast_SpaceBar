@@ -1,4 +1,8 @@
-# Symfony Mailer: Love Sending Emails Again
+# All about Uploading Files in Symfony
+## [27.02.2022]
+- File Uploads & Data Fixtures
+- Image Preview on the Form
+- Thumbnailing with LiipImagineBundle
 ## [26.02.2022]
 - The asset() Function & assets.context
 - URL to Public Assets
