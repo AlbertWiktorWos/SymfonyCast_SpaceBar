@@ -1,5 +1,23 @@
 # Documentation on how to configure the bundle can be found at: https://symfony.com/doc/current/bundles/LiipImagineBundle/basic-usage.html
 liip_imagine:
+    #our loader to load a files to liip_imagine
+    loaders:
+        flysystem_loader:
+            flysystem:
+                filesystem_service: oneup_flysystem.public_uploads_adapter_filesystem
+    data_loader: flysystem_loader
+
+    # The Flysystem filesystem points to the public/uploads directory, so the media/cache directory lives there.
+    # And thanks to the /uploads root_url, when it renders the path, it knows to start with /uploads and then the path in Flysystem.
+    resolvers:
+        flysystem_resolver:
+            flysystem:
+                filesystem_service: oneup_flysystem.public_uploads_adapter_filesystem
+                cache_prefix: media/cache
+                root_url: /uploads
+    # default cache resolver for saving thumbnails
+    cache: flysystem_resolver
+
     # valid drivers options include "gd" or "gmagick" or "imagick"
     driver: "gd"
     filter_sets:

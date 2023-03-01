@@ -1,4 +1,9 @@
 # All about Uploading Files in Symfony
+## [01.03.2022]
+- Flysystem <3 LiipImagineBundle
+- Flysystem: Streaming & Defensive Coding
+- Using the Filesystem
+- Flysystem: Filesystem Abstraction
 ## [27.02.2022]
 - File Uploads & Data Fixtures
 - Image Preview on the Form

@@ -33,7 +33,7 @@ class ArticleAdminController extends BaseController
             /** @var UploadedFile $uploadedFile */
             $uploadedFile = $form['imageFile']->getData(); // get data from imageFile field from
             if ($uploadedFile) {
-                $newFilename = $uploaderHelper->uploadArticleImage($uploadedFile);
+                $newFilename = $uploaderHelper->uploadArticleImage($uploadedFile, null);
                 $article->setImageFilename($newFilename);
             }
 
@@ -76,7 +76,7 @@ class ArticleAdminController extends BaseController
                     $destination,
                     $newFilename
                 ); */
-                $newFilename = $uploaderHelper->uploadArticleImage($uploadedFile);
+                $newFilename = $uploaderHelper->uploadArticleImage($uploadedFile, $article->getImageFilename());
                 $article->setImageFilename($newFilename);
             }
             $em->persist($article);

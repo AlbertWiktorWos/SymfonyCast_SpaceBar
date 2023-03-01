@@ -56,6 +56,18 @@ class UserFixture extends BaseFixture
             return $user;
         });
 
+        $user = new User();
+        $user->setEmail('admin@thespacebar.com');
+        $user->setFirstName('admin');
+        $user->setRoles(['ROLE_ADMIN']);
+        $user->agreeToTerms();
+
+        $user->setPassword($this->passwordEncoder->encodePassword(
+            $user,
+            'admin'
+        ));
+        $manager->persist($user);
+
         $manager->flush();
     }
 }

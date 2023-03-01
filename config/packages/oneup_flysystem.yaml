@@ -1,0 +1,10 @@
+# Read the documentation: https://github.com/1up-lab/OneupFlysystemBundle/blob/release/3.x/Resources/doc/index.md
+oneup_flysystem: #
+    adapters:
+        public_uploads_adapter: #we use it to put files to the public directory
+            local: #@If you're using version 4 of oneup/flysystem-bundle, the directory config is now called location.
+                directory: '%kernel.project_dir%/public/uploads'
+    filesystems:
+        public_uploads_adapter:
+            adapter: public_uploads_adapter
+            alias: League\Flysystem\Filesystem
