@@ -90,7 +90,8 @@ class ArticleAdminController extends BaseController
         }
 
         return $this->render('article_admin/edit.html.twig', [
-            'articleForm' => $form->createView()
+            'articleForm' => $form->createView(),
+            'article' => $article //we need this to upload some additional attachments (we use it there)
         ]);
     }
 

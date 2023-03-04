@@ -6,6 +6,8 @@
 parameters:
     cache_adapter: cache.adapter.apcu
     locale: 'en'
+    uploads_dir_name: 'uploads'
+    uploads_base_url: '%env(SITE_BASE_URL)%/%uploads_dir_name%'
 
 services:
     # default configuration for services in *this* file
@@ -22,6 +24,8 @@ services:
             $isDebug: '%kernel.debug%'
             # $uploadsPath: '%kernel.project_dir%/public/uploads' #we have to pass it to our UploaderHelper #used before systemfile
             $publicUploadsFilesystem: '@oneup_flysystem.public_uploads_adapter_filesystem'
+            $privateUploadsFilesystem: '@oneup_flysystem.private_uploads_adapter_filesystem'
+            $uploadedAssetsBaseUrl: '%uploads_base_url%'
 
     # custom aliases for autowiring
     Nexy\Slack\Client: '@nexy_slack.client'

@@ -14,7 +14,8 @@ liip_imagine:
             flysystem:
                 filesystem_service: oneup_flysystem.public_uploads_adapter_filesystem
                 cache_prefix: media/cache
-                root_url: /uploads
+                root_url: '%uploads_base_url%' #@see services.yaml
+
     # default cache resolver for saving thumbnails
     cache: flysystem_resolver
 

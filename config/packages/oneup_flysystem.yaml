@@ -3,8 +3,14 @@ oneup_flysystem: #
     adapters:
         public_uploads_adapter: #we use it to put files to the public directory
             local: #@If you're using version 4 of oneup/flysystem-bundle, the directory config is now called location.
-                directory: '%kernel.project_dir%/public/uploads'
+                directory: '%kernel.project_dir%/public/%uploads_dir_name%'
+        private_uploads_adapter: #we use it to put files to the private directory
+            local: #@If you're using version 4 of oneup/flysystem-bundle, the directory config is now called location.
+                directory: '%kernel.project_dir%/var/uploads'
     filesystems:
         public_uploads_adapter:
             adapter: public_uploads_adapter
+            alias: League\Flysystem\Filesystem
+        private_uploads_adapter:
+            adapter: private_uploads_adapter
             alias: League\Flysystem\Filesystem

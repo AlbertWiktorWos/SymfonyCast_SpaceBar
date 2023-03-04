@@ -1,4 +1,9 @@
 # All about Uploading Files in Symfony
+## [04.03.2022]
+- Storing Private Files
+- Uploading References
+- Setup for Uploading Private Article References
+- Absolute Asset Paths
 ## [01.03.2022]
 - Flysystem <3 LiipImagineBundle
 - Flysystem: Streaming & Defensive Coding
