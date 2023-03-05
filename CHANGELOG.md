@@ -1,5 +1,9 @@
 # All about Uploading Files in Symfony
 ## [04.03.2022]
+- Streaming the File Download
+- Endpoint for Downloading Private Files
+- Mime Type Validation
+## [04.03.2022]
 - Storing Private Files
 - Uploading References
 - Setup for Uploading Private Article References

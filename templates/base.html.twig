@@ -71,6 +71,13 @@
             </div>
         {% endfor %}
 
+        {# @see ArticleReferenceAdminController #}
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger">
+                {{ message }}
+            </div>
+        {% endfor %}
+
         {% block body %}{% endblock %}
 
         <footer class="footer">

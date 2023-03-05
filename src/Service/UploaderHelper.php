@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Controller\ArticleReferenceAdminController;
 use Gedmo\Sluggable\Util\Urlizer;
 use League\Flysystem\FilesystemInterface;
 use Psr\Log\LoggerInterface;
@@ -152,5 +153,20 @@ class UploaderHelper
             fclose($stream);
         }
         return $newFilename;
+    }
+
+    /**
+     * Get Resource of file from path depending on the isPublic variable
+     * @see ArticleReferenceAdminController::downloadArticleReference()
+     * @return resource
+     */
+    public function readStream(string $path, bool $isPublic)
+    {
+        $filesystem = $isPublic ? $this->publicUploadsFilesystem : $this->privateUploadsFilesystem;
+        $resource = $filesystem->readStream($path);
+        if ($resource === false) {
+            throw new \Exception(sprintf('Error opening stream for "%s"', $path));
+        }
+        return $resource;
     }
 }
