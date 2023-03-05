@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\ConstraintViolation;
@@ -174,5 +175,50 @@ class ArticleReferenceAdminController extends BaseController
         $uploaderHelper->deleteFile($reference->getFilePath(), false);
 
         return new Response(null, 204);
+    }
+
+    /**
+     * Handle to edit an reference
+     * @Route("/admin/article/references/{id}", name="admin_article_update_reference", methods={"PUT"})
+     * @param ArticleReference $reference
+     * @param EntityManagerInterface $entityManager
+     * @param SerializerInterface $serializer
+     * @param Request $request
+     * @param ValidatorInterface $validator we want to check if user sent an valid filename by validator
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function updateArticleReference(ArticleReference $reference, EntityManagerInterface $entityManager, SerializerInterface $serializer, Request $request, ValidatorInterface $validator)
+    {
+        $article = $reference->getArticle();
+        $this->denyAccessUnlessGranted('MANAGE', $article);
+        // we want to do opposit thing that serialize so from json we create an object
+        $serializer->deserialize(
+            $request->getContent(),
+            ArticleReference::class,
+            'json',
+            [
+                'object_to_populate' => $reference, //we dont want to create a new object, we update old object
+                'groups' => ['input'] // field $orginalFilename
+            ]
+        );
+
+        // we check if something goes wrong by validator @see ArticleReference
+        $violations = $validator->validate($reference);
+        if ($violations->count() > 0) {
+            return $this->json($violations, 400);
+        }
+
+        // now we can edit a reference that we deserialize above
+        $entityManager->persist($reference);
+        $entityManager->flush();
+        // return edited references
+        return $this->json(
+            $reference,
+            200,
+            [],
+            [
+                'groups' => ['main']
+            ]
+        );
     }
 }

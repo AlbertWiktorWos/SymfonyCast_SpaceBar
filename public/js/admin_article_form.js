@@ -8,9 +8,14 @@ class ReferenceList
         this.references = [];
         this.render();
 
-        // set an listener to click on delete button
+        // set a listener to click on delete button
         this.$element.on('click', '.js-reference-delete', (event) => {
             this.handleReferenceDelete(event);
+        });
+
+        // set a listener if we edit the filename
+        this.$element.on('blur', '.js-edit-filename', (event) => {
+            this.handleReferenceEditFilename(event);
         });
 
         $.ajax({ //we get data from element that has url to our endpoint in ArticleReferenceAdminController
@@ -29,6 +34,7 @@ class ReferenceList
 
     // we push an ajax request to the /admin/article/references to delete reference find by pushed reference.id
     handleReferenceDelete(event) {
+        // get the element that we wanted to delete
         const $li = $(event.currentTarget).closest('.list-group-item');
         const id = $li.data('id');
         $li.addClass('disabled');
@@ -44,12 +50,30 @@ class ReferenceList
         });
     }
 
+    handleReferenceEditFilename(event) {
+        // get the element that we wanted to edit
+        const $li = $(event.currentTarget).closest('.list-group-item');
+        const id = $li.data('id');
+        const reference = this.references.find(reference => {
+            return reference.id === id;
+        });
+        // get the val of new filename and push it via ajax
+        reference.orginalFilename = $(event.currentTarget).val();
+        $.ajax({
+            url: '/admin/article/references/'+id,
+            method: 'PUT',
+            data: JSON.stringify(reference)
+        });
+    }
+
     //this what we show before dynamism - this fragment was from edit.html.twig
     render() {
         const itemsHtml = this.references.map(reference => {
             return `
         <li class="list-group-item d-flex justify-content-between align-items-center" data-id="${reference.id}">
-            ${reference.orginalFilename} 
+             <!--  now we not only display but also let the user to edit name of the file ${reference.orginalFilename} -->
+                <input type="text" value="${reference.orginalFilename}" class="form-control js-edit-filename" style="width: auto;">
+
             <span>
                       <!--  link to download an element -->
                 <a href="/admin/article/references/${reference.id}/download" class="btn btn-link btn-sm"><span class="fa fa-download" style="vertical-align: middle"></span></a>

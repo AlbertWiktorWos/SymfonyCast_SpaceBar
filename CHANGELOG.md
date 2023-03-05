@@ -1,5 +1,7 @@
 # All about Uploading Files in Symfony
 ## [04.03.2022]
+- JavaScript for Editing a Reference
+- Edit Endpoint & Deserialization
 - Deleting Files
 - Rendering the File List Client Side
 - API Endpoint & Errors with Dropzone
