@@ -169,4 +169,19 @@ class UploaderHelper
         }
         return $resource;
     }
+
+    /**
+     * Handle deleting the file
+     * @param string $path
+     * @param bool $isPublic
+     * @throws \Exception
+     */
+    public function deleteFile(string $path, bool $isPublic)
+    {
+        $filesystem = $isPublic ? $this->publicUploadsFilesystem : $this->privateUploadsFilesystem;
+        $result = $filesystem->delete($path);
+        if ($result === false) {
+            throw new \Exception(sprintf('Error deleting "%s"', $path));
+        }
+    }
 }

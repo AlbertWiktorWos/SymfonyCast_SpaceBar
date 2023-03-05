@@ -1,5 +1,9 @@
 # All about Uploading Files in Symfony
 ## [04.03.2022]
+- Deleting Files
+- Rendering the File List Client Side
+- API Endpoint & Errors with Dropzone
+- Dropzone: AJAX Upload
 - Streaming the File Download
 - Endpoint for Downloading Private Files
 - Mime Type Validation
