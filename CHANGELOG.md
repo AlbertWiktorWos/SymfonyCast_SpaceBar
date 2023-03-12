@@ -1,6 +1,9 @@
 # All about Uploading Files in Symfony
+## [12.03.2022]
+- Reordering Endpoint & AJAX
+- Reordering the Files
 ## [04.03.2022]
-- JavaScript for Editing a Reference
+- JavaScr ipt for Editing a Reference
 - Edit Endpoint & Deserialization
 - Deleting Files
 - Rendering the File List Client Side

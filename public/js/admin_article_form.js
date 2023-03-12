@@ -5,6 +5,18 @@ class ReferenceList
 {
     constructor($element) {
         this.$element = $element;
+        this.sortable = Sortable.create(this.$element[0],//obj to handle a sortable functions, on constructor we passed first element of our list
+            { // list of options @see https://cdnjs.com/libraries/Sortable and https://www.jsdelivr.com/package/npm/sortablejs
+                handle: '.drag-handle', // we can only drag elements with class .drag-handle
+                animation: 150, //its look more smoother
+                onEnd: () => { //he knows the ids because we added data-id attribute to the li element!
+                    $.ajax({
+                        url: this.$element.data('url')+'/reorder',
+                        method: 'POST',
+                        data: JSON.stringify(this.sortable.toArray())
+                    });
+                }
+            });
         this.references = [];
         this.render();
 
@@ -71,6 +83,10 @@ class ReferenceList
         const itemsHtml = this.references.map(reference => {
             return `
         <li class="list-group-item d-flex justify-content-between align-items-center" data-id="${reference.id}">
+
+             <!--  span with drag-handle class that we define as a class that can be drag to reordering in constructor of sorterObj -->
+            <span class="drag-handle fa fa-reorder"></span>
+
              <!--  now we not only display but also let the user to edit name of the file ${reference.orginalFilename} -->
                 <input type="text" value="${reference.orginalFilename}" class="form-control js-edit-filename" style="width: auto;">
 
