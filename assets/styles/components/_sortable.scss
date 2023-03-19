@@ -1,0 +1,17 @@
+
+/* Sortable */
+.sortable-ghost {
+  background-color: lightblue;
+}
+.drag-handle {
+  cursor: grab;
+}
+
+@media (max-width: 767px) {
+  .comment-form {
+    min-width: 260px;
+  }
+  .comment-container {
+    max-width: 280px;
+  }
+}

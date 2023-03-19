@@ -125,6 +125,8 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/league/mime-type-detection" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/oneup/flysystem-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/league/flysystem" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/service-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/webpack-encore-bundle" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

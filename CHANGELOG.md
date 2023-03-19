@@ -1,3 +1,15 @@
+# Webpack Encore: Frontend like a Pro!
+## [19.03.2022]
+- Copying Files
+- Sass & Overriding Bootstrap Variables
+- Importing 3rd Party CSS + Image Paths
+- The Magic of Split Chunks
+- Bootstrap & the Curious Case of jQuery Plugins
+- Importing External Libraries & Global Variables
+- Modules: require() & import()
+- Twig Helpers, entrypoints.json & yarn Scripts
+- Webpacking our First Assets
+- Hello Webpack Encore
 # All about Uploading Files in Symfony
 ## [12.03.2022]
 - Reordering Endpoint & AJAX
