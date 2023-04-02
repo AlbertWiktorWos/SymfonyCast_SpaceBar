@@ -21,6 +21,13 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('app', './assets/app.js')
+    .addEntry('article_show', './assets/js/article_show.js')
+    .addEntry('admin_article_form', './assets/js/admin_article_form.js')
+
+    //we can add style entry that not require js to import it!
+    .addStyleEntry('account', './assets/styles/account.scss')
+    .addStyleEntry('login', './assets/styles/login.scss')
+
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')
@@ -30,8 +37,8 @@ Encore
 
     // will require an extra script tag for runtime.js
     // but, you probably want this, unless you're building a single-page app
-    //.enableSingleRuntimeChunk() //todo
-    .disableSingleRuntimeChunk() //todo
+    .enableSingleRuntimeChunk() //todo
+    //.disableSingleRuntimeChunk() //todo
 
     /*
      * FEATURE CONFIG
@@ -62,7 +69,8 @@ Encore
 
     // enables Sass/SCSS support
     .enableSassLoader()
-
+    // PostCSS is a library that allows you to run things at the "end" of your CSS being processed. And it's the easiest way to integrate autoprefixer.
+    .enablePostCssLoader()
 
     /**
      * We can give it a destination... and this has a few wildcards in it, like [path], [name] and [ext].
@@ -85,7 +93,7 @@ Encore
     //.enableIntegrityHashes(Encore.isProduction())
 
     // uncomment if you're having problems with a jQuery plugin
-    //.autoProvidejQuery()
+    .autoProvidejQuery()
 ;
 
 module.exports = Encore.getWebpackConfig();

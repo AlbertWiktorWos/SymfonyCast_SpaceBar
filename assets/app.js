@@ -12,7 +12,7 @@ import './styles/app.scss';
 //we can make variable with our js file
 //const getNiceMessageVariable = require('./js/get_nice_message.js');
 //or jus import file
-import getNiceMessage from './js/get_nice_message.js';
+import getNiceMessage from './js/components/get_nice_message.js';
 
 // we add jquery by yarn add jquery –dev
 import $ from 'jquery';

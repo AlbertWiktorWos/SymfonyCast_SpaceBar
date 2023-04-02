@@ -1,3 +1,11 @@
+import Dropzone from 'dropzone'
+import 'dropzone/dist/dropzone.css'
+import Sortable from 'sortablejs'
+//import './components/algolia-autocomplete' now we export function so we need to use from
+//without lazy dependencies: import autocomplete from './components/algolia-autocomplete'
+
+import $ from 'jquery';
+
 Dropzone.autoDiscover = false; //That tells Dropzone to not automatically configure itself on any form that has the dropzone class
 
 
@@ -107,6 +115,15 @@ class ReferenceList
 
 $(document).ready(function() {
 
+    // now we use an export so lets check if we could use it than autocomplete
+    const $autoComplete = $('.js-user-autocomplete');
+    if (!$autoComplete.is(':disabled')) {
+        //without lazy dependencies: autocomplete($autoComplete, 'users', 'email');
+        import('./components/algolia-autocomplete').then((autocomplete) => {
+           //we have to use default, because our import use export!
+            autocomplete.default($autoComplete, 'users', 'email');
+        });
+    }
 
     // we create new ReferenceList object (@see class above) with our list @see templates/article_admin/edit.html.twig
     var referenceList = new ReferenceList($('.js-reference-list'));

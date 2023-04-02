@@ -1,4 +1,10 @@
+import '../styles/article_show.scss';
+import $ from 'jquery';
+//import 'bootstrap' we dont have to import it, because our jquery obj $ is an instance of jquery modified by bootstrap in app.js (thanks to enableSingleRuntimeChunk)
 $(document).ready(function() {
+
+    $('.js-like-article').tooltip();
+
     $('.js-like-article').on('click', function(e) {
         e.preventDefault();
 

@@ -1,4 +1,16 @@
 # Webpack Encore: Frontend like a Pro!
+## [02.04.2022]
+- Production Build & Deployment
+- Async Imports
+- The Single Runtime Chunk
+- Polyfills & Babel
+- browserslist: What Browsers do you need to Support?
+- Support any Browser with PostCSS & Babel
+- addStyleEntry(): CSS-Only Entrypoint
+- Auto-Provide jQuery for Mischievous Packages
+- Refactoring Autocomplete JS & CSS
+- Entry Refactoring
+- Page-Specific JS: Multiple Entrie
 ## [19.03.2022]
 - Copying Files
 - Sass & Overriding Bootstrap Variables

@@ -5,7 +5,9 @@
 {% block stylesheets %}
     {{ parent() }}
 
-    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+    {#    now we use entrystyle by webpack <link rel="stylesheet" href="{{ asset('css/login.css') }}">#}
+    {{encore_entry_link_tags('login') }}
+
 {% endblock %}
 
 {% block body %}
