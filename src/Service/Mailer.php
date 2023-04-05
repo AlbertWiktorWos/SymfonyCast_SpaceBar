@@ -75,6 +75,7 @@ class Mailer
 
         /**
          * If we use a messanger we have to put this in real file, because we cant store content in database (until symfony 4.4)
+         * //todo if we dont have a directory we should crate it before file_put_contents
          */
         $path = __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'var'.DIRECTORY_SEPARATOR.'tmpemailsattachments'.DIRECTORY_SEPARATOR.uniqid('tempemailpdf'). '.pdf';
         file_put_contents($path, $pdf);

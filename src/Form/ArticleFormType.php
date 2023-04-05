@@ -16,6 +16,8 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\NotNull;
 
@@ -55,13 +57,12 @@ class ArticleFormType extends AbstractType
             ])
         ;
 
-        $imageConstraints = [
+        $imageConstraints = [ //we added our constraints to our imageupload file field
             new Image([
                 'maxSize' => '5M'
             ])
         ];
-
-        if (!$isEdit || !$article->getImageFilename()) {
+        if (!$isEdit || !$article->getImageFilename()) { // but in edit (not new) we required an image
             $imageConstraints[] = new NotNull([
                 'message' => 'Please upload an image',
             ]);

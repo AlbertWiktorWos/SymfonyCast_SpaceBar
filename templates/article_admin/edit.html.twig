@@ -12,8 +12,25 @@
                 button_text: 'Update!'
             }) }}
         </div>
+
+        {# There will be our widget to put some additional files to article#}
         <div class="col-sm-4">
             <h3>References</h3>
+
+            {# see ul below, this commented block of code was used before we wanted to treat this referenceslist dynamicaly (now we react after upload new file etc.)
+            <ul class="list-group small">
+                {% for reference in article.articleReferences %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ reference.orginalFilename }}
+                        <span>
+                            <a href="{{ path('admin_article_download_reference', {
+                                id: reference.id
+                            }) }}"><span class="fa fa-download"></span></a>
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+            #}
 
             <ul class="list-group small js-reference-list" data-url="{{ path('admin_article_list_references', {id: article.id}) }}"></ul>
 
@@ -21,7 +38,10 @@
 
             <form action="{{ path('admin_article_add_reference', {
                 id: article.id
-            }) }}" method="POST" enctype="multipart/form-data" class="dropzone js-reference-dropzone">
+            }) }}" method="POST" enctype="multipart/form-data" class="dropzone  js-reference-dropzone">
+                {# after adding the dropzone we dont need these input and button, we use just class="dropzone" above
+                <input type="file" name="reference">
+                <button type="submit" class="btn btn-sm btn-primary">Upload</button>#}
             </form>
         </div>
     </div>
@@ -29,12 +49,23 @@
 
 {% block stylesheets %}
     {{ parent() }}
-
+    {# @see admin_article_form.js
+        now we replace it by yarn add dropzone sortablejs --dev
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css" integrity="sha512-WvVX1YO12zmsvTpUQV8s7ZU98DnkaAokcciMZJfnNWyNzm7//QRV61t4aEr0WdIa4pe854QHLTV302vH92FSMw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    #}
     {{ encore_entry_link_tags('admin_article_form') }}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
+    {# @see admin_article_form.js
+        now we replace it by yarn add dropzone sortablejs --dev
+     library to dropzone
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js" integrity="sha512-oQq8uth41D+gIH/NJvSJvVB85MFk1eWpMK6glnkg6I7EdMqC1XVkW7RxLheXwmFdG03qScCM7gKS/Cx3FYt7Tg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    library to sort
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.8.3/Sortable.min.js" integrity="sha256-uNITVqEk9HNQeW6mAAm2PJwFX2gN45l8a4yocqsFI6I=" crossorigin="anonymous"></script>
+    #}
 
+    {#  old way before webpack <script src="{{ asset('js/admin_article_form.js') }}"></script>#}
     {{ encore_entry_script_tags('admin_article_form') }}
 {% endblock %}

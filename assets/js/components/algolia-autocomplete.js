@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import 'autocomplete.js/dist/autocomplete.jquery';
+import 'autocomplete.js/dist/autocomplete.jquery'; //we dont use "from" cause it doesnt export anything
 import '../../css/algolia-autocomplete.scss';
 
 export default function($elements, dataKey, displayKey) {

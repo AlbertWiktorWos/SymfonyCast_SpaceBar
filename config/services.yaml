@@ -6,15 +6,8 @@
 parameters:
     cache_adapter: cache.adapter.apcu  #we use filesystem in dev env (we dont need an APCU)
     locale: 'en'
-    uploads_base_url: '%env(SITE_BASE_URL)%/uploads'
-      #In Symfony 5.1, instead of setting these 2 parameters, you can set 1 new piece of config:
-      # config/packages/routing.yaml
-      #framework:
-      #    router:
-      #        # ...
-      #        default_uri: 'https://example.org/my/path/'
-    router.request_context.scheme: '%env(SITE_BASE_SCHEME)%'
-    router.request_context.host: '%env(SITE_BASE_HOST)%'
+    uploads_dir_name: 'uploads'
+    uploads_base_url: '%env(SITE_BASE_URL)%/%uploads_dir_name%'
 
 services:
     # default configuration for services in *this* file
@@ -22,14 +15,16 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
         public: false       # Allows optimizing the container by removing unused services; this also means
-                            # fetching services directly from the container via $container->get() won't work.
-                            # The best practice is to be explicit about your dependencies anyway.
+          # fetching services directly from the container via $container->get() won't work.
+        # The best practice is to be explicit about your dependencies anyway.
 
         # setup special, global autowiring rules
         bind:
             $markdownLogger: '@monolog.logger.markdown'
             $isDebug: '%kernel.debug%'
-            $uploadsFilesystem: '@oneup_flysystem.uploads_filesystem_filesystem'
+            # $uploadsPath: '%kernel.project_dir%/public/uploads' #we have to pass it to our UploaderHelper #used before systemfile
+            $publicUploadsFilesystem: '@oneup_flysystem.public_uploads_adapter_filesystem'
+            $privateUploadsFilesystem: '@oneup_flysystem.private_uploads_adapter_filesystem'
             $uploadedAssetsBaseUrl: '%uploads_base_url%'
             string $publicDir: '%kernel.project_dir%/public' #we need public directory to pass it to the twig extension to get our css files prepared by encore @see src/Twig/AppExtension.php
 
@@ -56,4 +51,5 @@ services:
             - { name: form.type_extension,
                 extended_type: Symfony\Component\Form\Extension\Core\Type\TextareaType }
 
+    #service to handle the subfolder of our site to get proper directory of uploaded files @see UploaderHelper
     Symfony\Component\Asset\Context\RequestStackContext: '@assets.context'

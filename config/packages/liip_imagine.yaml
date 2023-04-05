@@ -1,66 +1,39 @@
+# Documentation on how to configure the bundle can be found at: https://symfony.com/doc/current/bundles/LiipImagineBundle/basic-usage.html
 liip_imagine:
-#    # valid drivers options include "gd" or "gmagick" or "imagick"
-#    driver: "gd"
-#
-
+    #our loader to load a files to liip_imagine
     loaders:
         flysystem_loader:
             flysystem:
-                filesystem_service: oneup_flysystem.uploads_filesystem_filesystem
-
-    # default loader to use for all filter sets
+                filesystem_service: oneup_flysystem.public_uploads_adapter_filesystem
     data_loader: flysystem_loader
 
+    # The Flysystem filesystem points to the public/uploads directory, so the media/cache directory lives there.
+    # And thanks to the /uploads root_url, when it renders the path, it knows to start with /uploads and then the path in Flysystem.
     resolvers:
         flysystem_resolver:
             flysystem:
-                filesystem_service: oneup_flysystem.cached_uploads_filesystem_filesystem
+                filesystem_service: oneup_flysystem.public_uploads_adapter_filesystem
                 cache_prefix: media/cache
-                root_url: '%uploads_base_url%'
+                root_url: '%uploads_base_url%' #@see services.yaml
 
     # default cache resolver for saving thumbnails
     cache: flysystem_resolver
 
+    # valid drivers options include "gd" or "gmagick" or "imagick"
+    driver: "gd"
     filter_sets:
-#
-#        # an example thumbnail transformation definition
-#        # https://symfony.com/doc/current/bundles/LiipImagineBundle/basic-usage.html#create-thumbnails
+        #
+        #        # an example thumbnail transformation definition
+        #        # https://symfony.com/doc/current/bundles/LiipImagineBundle/basic-usage.html#create-thumbnails
         squared_thumbnail_small:
             filters:
                 thumbnail:
                     size:          [200, 200]
                     mode:          outbound
                     allow_upscale: true
-
         squared_thumbnail_medium:
             filters:
                 thumbnail:
                     size:          [500, 500]
                     mode:          outbound
                     allow_upscale: true
-
-#
-#            # set your image quality defaults
-#            jpeg_quality:          85
-#            png_compression_level: 8
-#
-#            # setup the filter steps to apply for this transformation
-#            filters:
-#
-#                # auto rotate the image using EXIF metadata
-#                auto_rotate: ~
-#
-#                # strip the image of all metadata
-#                strip: ~
-#
-#                # scale and square the image to the given dimensions
-#                thumbnail:
-#                    size:          [253, 253]
-#                    mode:          outbound
-#                    allow_upscale: true
-#
-#                # create border by placing image on larger black background
-#                background:
-#                    size:     [256, 256]
-#                    position: center
-#                    color:    '#fff'

@@ -6,10 +6,23 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-        {% endblock %}
-    </head>
+    {% block stylesheets %}
+        {#now we use webpack encore#}
+        {# <link rel="stylesheet" href="{{ asset('build/app.css') }}">#}
+        {#now we use webpack encore but we add tag to our entry from webpack.config.js @see .addEntry('app', './assets/app.js')#}
+        {{ encore_entry_link_tags('app') }}
+
+        {#now we use webpack encore and we added bootstrap css by add import in our app.css#}
+        {# <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">#}
+
+        {#  now we added it by yarn add font-awesome --dev#}
+        {#  <link rel="stylesheet" href="{{ asset('css/font-awesome.css') }}">#}
+
+        {#  now move it to the app.css with path change of our images! --dev#}
+        {# <link rel="stylesheet" href="{{ asset('css/styles.css') }}">#}
+
+    {% endblock %}
+</head>
 
     <body>
         {% if is_granted('ROLE_PREVIOUS_ADMIN') %}
@@ -69,6 +82,7 @@
             </div>
         {% endfor %}
 
+        {# @see ArticleReferenceAdminController #}
         {% for message in app.flashes('error') %}
             <div class="alert alert-danger">
                 {{ message }}
@@ -85,7 +99,32 @@
 
 
         {% block javascripts %}
+            {#now we use webpack encore#}
+            {# <script src="{{ asset('build/app.js') }}"></script>#}
+            {#now we use webpack encore but we add tag to our entry from webpack.config.js @see .addEntry('app', './assets/app.js')#}
             {{ encore_entry_script_tags('app') }}
+
+            {#We remove jquery form here and replace it by yarn add jquery --dev#}
+            {# <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>#}
+
+            {#We remove jquery form here and replace it by yarn add popper.js --dev#}
+            {# <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>#}
+
+            {# we remove bootstrap from here and replace it by yarn add "bootstrap@^4" --dev #}
+            {# <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>#}
+
+            {#We moved that script to js directory to use  jquery $ not in global variable
+                    <script>
+                        $('.dropdown-toggle').dropdown();
+                        // on custom file field change we want to set the added name
+                        $('.custom-file-input').on('change', function(event) {
+                            var inputFile = event.currentTarget;
+                            $(inputFile).parent()
+                                .find('.custom-file-label')
+                                .html(inputFile.files[0].name);
+                        });
+                    </script>
+            #}
         {% endblock %}
     </body>
 </html>

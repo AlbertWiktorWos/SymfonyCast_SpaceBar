@@ -23,6 +23,10 @@ class AppExtension extends AbstractExtension implements ServiceSubscriberInterfa
         $this->publicDir = $publicDir;
     }
 
+    /**
+     * We added a new function to get path to our uploaded images
+     * @return TwigFunction[]
+     */
     public function getFunctions(): array
     {
         return [
@@ -45,6 +49,11 @@ class AppExtension extends AbstractExtension implements ServiceSubscriberInterfa
             ->parse($value);
     }
 
+    /**
+     * We use our service to get path to the uploaded files
+     * @param string $path
+     * @return string
+     */
     public function getUploadedAssetPath(string $path): string
     {
         return $this->container

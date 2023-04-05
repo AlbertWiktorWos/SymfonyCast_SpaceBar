@@ -20,6 +20,7 @@ Encore
     .addEntry('app', './assets/js/app.js')
     .addEntry('article_show', './assets/js/article_show.js')
     .addEntry('admin_article_form', './assets/js/admin_article_form.js')
+    //we can add style entry that not require js to import it!
     .addStyleEntry('account', './assets/css/account.scss')
     .addStyleEntry('login', './assets/css/login.scss')
     .addStyleEntry('email', './assets/css/email.scss')
@@ -41,22 +42,36 @@ Encore
      * list of features, see:
      * https://symfony.com/doc/current/frontend.html#adding-more-features
      */
+    /**
+     * Before we restart Encore, shouldn't we delete some of these old files, at least to get them out of the way and clean things up?
+     * Nope! One other optional feature that we're using is called cleanOutputBeforeBuild() that do it for us
+     */
     .cleanupOutputBeforeBuild()
     .enableBuildNotifications()
     .enableSourceMaps(!Encore.isProduction())
     // enables hashed filenames (e.g. app.abc123.css)
     .enableVersioning(Encore.isProduction())
 
+    .configureBabel((config) => {
+        config.plugins.push('@babel/plugin-proposal-class-properties');
+    })
+
     // enables @babel/preset-env polyfills
-    .configureBabel(() => {}, {
-        useBuiltIns: 'usage',
-        corejs: 3
+    .configureBabelPresetEnv((config) => {
+        config.useBuiltIns = 'usage';
+        config.corejs = 3;
     })
 
     // enables Sass/SCSS support
     .enableSassLoader()
+    // PostCSS is a library that allows you to run things at the "end" of your CSS being processed. And it's the easiest way to integrate autoprefixer.
     .enablePostCssLoader()
 
+    /**
+     * We can give it a destination... and this has a few wildcards in it, like [path], [name] and [ext].
+     * But use this second one instead: it gives us built-in file versioning
+     * by including a hash of the contents in the filename.
+     */
     .copyFiles({
         from: './assets/images',
         to: 'images/[path][name].[hash:8].[ext]'
@@ -64,6 +79,9 @@ Encore
 
     // uncomment if you use TypeScript
     //.enableTypeScriptLoader()
+
+    // uncomment if you use React
+    //.enableReactPreset()
 
     // uncomment to get integrity="..." attributes on your script & link tags
     // requires WebpackEncoreBundle 1.4 or higher

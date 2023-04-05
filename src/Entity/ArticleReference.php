@@ -66,6 +66,13 @@ class ArticleReference
         return $this->article;
     }
 
+    public function setArticle(?Article $article): self
+    {
+        $this->article = $article;
+
+        return $this;
+    }
+
     public function getFilename(): ?string
     {
         return $this->filename;
@@ -102,6 +109,10 @@ class ArticleReference
         return $this;
     }
 
+    /**
+     * Get file path
+     * @return string
+     */
     public function getFilePath(): string
     {
         return UploaderHelper::ARTICLE_REFERENCE.'/'.$this->getFilename();

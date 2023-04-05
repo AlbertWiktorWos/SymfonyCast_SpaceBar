@@ -1,13 +1,13 @@
 # SymfonyCast
-Project based on SymfonyCast tutorial 
+Project based on SymfonyCast tutorial
 
 # Quick start
-run in command line next commands: 
+run in command line next commands:
 * `composer install`
 * `yarn install`
 * `yarn watch`
 * `symfony serve -d` *Caution - if website doesnt open try without -d*
-## prepare database 
+## prepare database
 * `symfony console doctrine:database:create` to create database on docker-compose basics
 * `symfony console doctrine:migration:migrate`
 * `symfony console doctrine:fixtures:load` to fill the database
@@ -27,9 +27,9 @@ to check status:
 * `symfony server:status`
 
 to use https run first:
-* `symfony.exe server:ca:install` 
+* `symfony.exe server:ca:install`
 
-### old Start 
+### old Start
 run in command line:
 * `php -S 127.0.0.1:8000 -t public/`
 
@@ -61,6 +61,11 @@ to set this env we need to change APP_ENV variable in .env
 ##Testing email
 * visit https://mailtrap.io/
 * visit https://sendgrid.com/
+
+####run:
+set MAILER_DSN and DEV_MAIL_RECIPIENT from .env.local.dist
+php bin/console messenger:consume -vv
+php bin/console app:author-weekly-report:send
 
 ## Database fast scripts
 * `symfony console doctrine:database:drop --force`

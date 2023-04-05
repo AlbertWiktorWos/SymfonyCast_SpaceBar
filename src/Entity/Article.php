@@ -190,8 +190,14 @@ class Article
         return $this;
     }
 
+    /**
+     * We get path to image in some directory - without adding for exmaple an uploads/ prefix
+     * @return string
+     */
     public function getImagePath()
     {
+        // return 'uploads/article_image/'.$this->getImageFilename();
+        // return 'images/'.$this->getImageFilename();
         return UploaderHelper::ARTICLE_IMAGE.'/'.$this->getImageFilename();
     }
 
@@ -320,5 +326,28 @@ class Article
     public function getArticleReferences(): Collection
     {
         return $this->articleReferences;
+    }
+
+    public function addArticleReference(ArticleReference $articleReference): self
+    {
+        if (!$this->articleReferences->contains($articleReference)) {
+            $this->articleReferences[] = $articleReference;
+            $articleReference->setArticle($this);
+        }
+
+        return $this;
+    }
+
+    public function removeArticleReference(ArticleReference $articleReference): self
+    {
+        if ($this->articleReferences->contains($articleReference)) {
+            $this->articleReferences->removeElement($articleReference);
+            // set the owning side to null (unless already changed)
+            if ($articleReference->getArticle() === $this) {
+                $articleReference->setArticle(null);
+            }
+        }
+
+        return $this;
     }
 }

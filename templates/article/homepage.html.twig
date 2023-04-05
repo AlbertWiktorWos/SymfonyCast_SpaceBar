@@ -11,6 +11,8 @@
                 <!-- H1 Article -->
                 <a class="main-article-link" href="#">
                     <div class="main-article mb-5 pb-3">
+                        {# we added build because we now use an encorewebpack with copyFile configuration
+                        <img src="{{ asset('build/images/meteor-shower.jpg') }}" alt="meteor shower">#}
                         <img src="{{ asset('build/images/meteor-shower.jpg') }}" alt="meteor shower">
                         <h1 class="text-center mt-2">Ursid Meteor Shower: <br>Healthier than a regular shower?</h1>
                     </div>
@@ -21,6 +23,8 @@
                 {% for article in articles %}
                 <div class="article-container my-1">
                     <a href="{{ path('article_show', {slug: article.slug}) }}">
+                        {#  <img class="article-img" src="{{ asset(article.imagePath) }}"> now we use custom method to get url to our uploaded images also @see liip_imagine.yaml to see imagine_filter config#}
+                        {#  before filesystem <img class="article-img" src="{{ uploaded_asset(article.imagePath)|imagine_filter('squared_thumbnail_small') }}"> #}
                         <img class="article-img" src="{{ article.imagePath|imagine_filter('squared_thumbnail_small') }}">
                         <div class="article-title d-inline-block pl-3 align-middle">
                             <span>{{ article.title }}</span>
