@@ -71,6 +71,7 @@ class ReferenceList
                 }
             });
         this.references = [];
+        this.dropzone = null;
         this.render();
 
         // set a listener to click on delete button
@@ -91,6 +92,10 @@ class ReferenceList
         })
     }
 
+    setDropzone(dropzone) {
+        this.dropzone = dropzone;
+    }
+
     // we want to add new reference to the list
     addReference(reference) {
         this.references.push(reference);
@@ -108,6 +113,14 @@ class ReferenceList
             url: '/admin/article/references/'+id,
             method: 'DELETE'
         }).then(() => {
+
+            if (this.dropzone) {
+                const file = this.dropzone.files.find(f => f.id === id);
+                if (file) {
+                    this.dropzone.removeFile(file);
+                }
+            }
+
             this.references = this.references.filter(reference => {
                 return reference.id !== id;
             });
@@ -124,7 +137,7 @@ class ReferenceList
             return reference.id === id;
         });
         // get the val of new filename and push it via ajax
-        reference.orginalFilename = $(event.currentTarget).val();
+        reference.originalFilename = $(event.currentTarget).val();
         $.ajax({
             url: '/admin/article/references/'+id,
             method: 'PUT',
@@ -141,8 +154,8 @@ class ReferenceList
              <!--  span with drag-handle class that we define as a class that can be drag to reordering in constructor of sorterObj -->
             <span class="drag-handle fa fa-reorder"></span>
 
-             <!--  now we not only display but also let the user to edit name of the file ${reference.orginalFilename} -->
-                <input type="text" value="${reference.orginalFilename}" class="form-control js-edit-filename" style="width: auto;">
+             <!--  now we not only display but also let the user to edit name of the file ${reference.originalFilename} -->
+                <input type="text" value="${reference.originalFilename}" class="form-control js-edit-filename" style="width: auto;">
 
             <span>
                       <!--  link to download an element -->
@@ -176,6 +189,7 @@ function initializeDropzone(referenceList) {
             //handle the success by adding new Reference to the list of attachments
             this.on('success', function(file, data) {
                 referenceList.addReference(data);
+                file.id = data.id; // we add id to the file to be able to find and delete it later
             });
             //handle the error massage  and show us what happened
             this.on('error', function(file, data) {
@@ -186,4 +200,6 @@ function initializeDropzone(referenceList) {
             });
         }
     });
+
+    referenceList.setDropzone(dropzone);
 }

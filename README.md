@@ -1,16 +1,20 @@
 # SymfonyCast
 Project based on SymfonyCast tutorial
 
+
 # Quick start
 run in command line next commands:
 * `composer install`
 * `yarn install`
 * `yarn watch`
+* `docker-compose up -d`
 * `symfony serve -d` *Caution - if website doesnt open try without -d*
+* `symfony var:export DATABASE_PORT` to check the port of the database to set it in database propeteries in phpStorm viewer and in .env
 ## prepare database
 * `symfony console doctrine:database:create` to create database on docker-compose basics
 * `symfony console doctrine:migration:migrate`
 * `symfony console doctrine:fixtures:load` to fill the database
+
 
 ## Show config
 to see list of variables and connection to database run:
@@ -41,6 +45,10 @@ to install yarn run `yarn install` after we check that yarn and node extists (`n
 to build run `yarn watch` it builds and watch all the changes
 
 we also added a jquery to it by `yarn add jquery --dev` and added a bootstrap by `yarn add bootstrap --dev`
+
+if error occurs
+node:internal/crypto/hash:71 this[kHandle] = new _Hash(algorithm, xofLen); ^ Error: error:0308010C:digital envelope routines::unsupported at new Hash (node:internal/crypto/hash:71:19) at Object.createHash (node:crypto:133:10) at module.exports
+we need to set in environment variable NODE_OPTIONS the value --openssl-legacy-provider
 
 ## First config phpStorm
 *plugins: symfony plugin, php annotations

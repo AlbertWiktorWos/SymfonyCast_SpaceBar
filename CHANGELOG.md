@@ -1,4 +1,8 @@
 # Final
+## [04.01.2026]
+- Adding more links to navigate through the app
+- Fix to admin_artifle_form.js script to better handling references images
+- Adding docker-compose.yml for database and s3 services with config
 ## [05.04.2023]
 - Final merging Mailer and WepackEncore and Filesystem projects
 # Symfony Mailer: Love Sending Emails Again
