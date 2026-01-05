@@ -6,8 +6,11 @@
 parameters:
     cache_adapter: cache.adapter.apcu  #we use filesystem in dev env (we dont need an APCU)
     locale: 'en'
-    uploads_dir_name: 'uploads'
-    uploads_base_url: '%env(SITE_BASE_URL)%/%uploads_dir_name%'
+    #old url for our local filesystem uploads
+    #    uploads_base_url: '%env(SITE_BASE_URL)%/%uploads_dir_name%'
+    #    uploads_dir_name: 'uploads'
+    # s3 url for our uploaded files
+    uploads_base_url: 'http://localhost:9000/public/' #if symfony is on container use http://minio:9000/public/
 
 services:
     # default configuration for services in *this* file
@@ -26,6 +29,7 @@ services:
             $publicUploadsFilesystem: '@oneup_flysystem.public_uploads_adapter_filesystem'
             $privateUploadsFilesystem: '@oneup_flysystem.private_uploads_adapter_filesystem'
             $uploadedAssetsBaseUrl: '%uploads_base_url%'
+            $privateS3Bucket: '%env(AWS_S3_ACCESS_PRIVATE_BUCKET)%'
             string $publicDir: '%kernel.project_dir%/public' #we need public directory to pass it to the twig extension to get our css files prepared by encore @see src/Twig/AppExtension.php
 
     # custom aliases for autowiring
@@ -53,3 +57,14 @@ services:
 
     #service to handle the subfolder of our site to get proper directory of uploaded files @see UploaderHelper
     Symfony\Component\Asset\Context\RequestStackContext: '@assets.context'
+
+    Aws\S3\S3Client:
+        arguments:
+            -
+                version: '2006-03-01' #
+                region: "us-east-1" # default minio region
+                endpoint: 'http://localhost:9000' #configuration for our local minio container - if symfony is on container use http://minio:9000 (name of the container)
+                use_path_style_endpoint: true
+                credentials:
+                    key: '%env(AWS_S3_ACCESS_ID)%'
+                    secret: '%env(AWS_S3_ACCESS_SECRET)%'

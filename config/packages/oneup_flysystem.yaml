@@ -1,12 +1,31 @@
 # Read the documentation: https://github.com/1up-lab/OneupFlysystemBundle/blob/release/3.x/Resources/doc/index.md
 oneup_flysystem: #
+
+    cache:
+        psr6_app_cache:
+            psr6: #it pass a PSR6-style caching object to the adapter
+               service: cache.flysystem.psr6 #our cache service defined in cache.yaml
     adapters:
         public_uploads_adapter: #we use it to put files to the public directory
-            local: #@If you're using version 4 of oneup/flysystem-bundle, the directory config is now called location.
-                directory: '%kernel.project_dir%/public/%uploads_dir_name%'
+        #https://github.com/1up-lab/OneupFlysystemBundle/blob/main/doc/adapter_awss3.md
+            awss3v3:
+                client: Aws\S3\S3Client #client from services.yaml
+                bucket: '%env(AWS_S3_ACCESS_PUBLIC_BUCKET)%'
+                prefix: '' # Optional path prefix, you can set empty string
+
+#            for local filesystem
+#            local: #@If you're using version 4 of oneup/flysystem-bundle, the directory config is now called location.
+#                directory: '%kernel.project_dir%/public/%uploads_dir_name%'
+
         private_uploads_adapter: #we use it to put files to the private directory
-            local: #@If you're using version 4 of oneup/flysystem-bundle, the directory config is now called location.
-                directory: '%kernel.project_dir%/var/uploads'
+            awss3v3:
+                client: Aws\S3\S3Client #client from services.yaml
+                bucket: '%env(AWS_S3_ACCESS_PRIVATE_BUCKET)%'
+                prefix: '' # Optional path prefix, you can set empty string
+
+#            for local filesystem
+#            local: #@If you're using version 4 of oneup/flysystem-bundle, the directory config is now called location.
+#                directory: '%kernel.project_dir%/var/uploads'
     filesystems:
         public_uploads_adapter:
             adapter: public_uploads_adapter
@@ -14,3 +33,8 @@ oneup_flysystem: #
         private_uploads_adapter:
             adapter: private_uploads_adapter
             alias: League\Flysystem\Filesystem
+      # our cached filesystems
+        cached_public_uploads_adapter:
+            adapter: public_uploads_adapter
+            alias: League\Flysystem\Filesystem
+            cache: psr6_app_cache

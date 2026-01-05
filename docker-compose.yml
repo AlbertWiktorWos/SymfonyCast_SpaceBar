@@ -1,0 +1,57 @@
+version: '3.7'
+
+services:
+  database:
+    image: mysql:8.0
+    container_name: spacebar_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: the_spacebar
+      MYSQL_USER: db_user
+      MYSQL_PASSWORD: db_password
+    ports:
+      - "3307:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+
+  minio: #contener for S3 compatible storage
+    image: minio/minio:latest #Docker image containing the MinIO server - the latest version
+    container_name: spacebar_minio #Explicit name of the container.
+    ports:
+      - "9000:9000"   #  Port 9000 in container = S3 API
+      - "9001:9001"   #  Port 9000 in container = MinIO Console (WebUI)
+    environment: #Environment variables passed to the container.
+      MINIO_ROOT_USER: ${AWS_S3_ACCESS_ID} #MinIO administrator login. Equivalent: AWS Access Key ID
+      MINIO_ROOT_PASSWORD: ${AWS_S3_ACCESS_SECRET} #Administrator password. Equivalent: AWS Secret Access Key
+      # "server" starts the MinIO server (long-running mode).
+      #/data A directory within a container where: bucket files are stored objects are stored
+      #--console-address ":9001" Exposes the administration panel on port 9001. The colon means: listening on all interfaces (0.0.0.0) Without this flag: the console can be disabled or randomly assigned
+    command: server /data --console-address ":9001"
+    volumes: # Mounts the Docker volume: minio-data -> /data in the container so data does not disappear after restarting the container, buckets and files are persistent.
+      - minio-data:/data
+
+    #This container is not a server. It's a one-time initialization script.
+  minio-init: #Name of the MinIO initialization service.
+    image: minio/mc #Official image with the mc (MinIO Client) tool.
+    depends_on: #Docker will start minio before minio-init. Note: It does not guarantee that MinIO is ready, only that the container has been started. Therefore, sleep is still active.
+      - minio
+    #Overrides the default ENTRYPOINT of the image. > = YAML multiline string (one logical line).
+    # /bin/sh -c "  Launches the shell (sh).  -c → execute commands passed as string
+    # sleep 5; Waits 5 seconds for MinIO to: start start listening on :9000 Without this: mc would attempt to connect too early and the container would crash
+    # mc alias set local http://minio:9000 minio minio123; mc alias set local http://minio:9000 minio minio123; Creates a connection alias: local -> alias name http://minio:9000 -> endpoint (hostname = service name!) minio → access key minio123 → secret key
+    # mc mb local/public --ignore-existing; mc mb = make bucket Creates a public bucket --ignore-existing: No error if the bucket already exists Key for multiple Docker Compose Ups
+    # mc anonymous set download local/public; Sets access policy: anonymous user download only Effect: files from public are accessible without keys behavior similar to public-read in AWS S3
+    entrypoint: > 
+      /bin/sh -c "
+      sleep 5;
+      mc alias set local http://minio:9000 ${AWS_S3_ACCESS_ID} ${AWS_S3_ACCESS_SECRET};
+      mc mb local/public --ignore-existing;
+      mc mb local/private --ignore-existing;
+      mc anonymous set download local/public;
+      exit 0;
+      "
+
+volumes:
+  db-data:
+  minio-data:

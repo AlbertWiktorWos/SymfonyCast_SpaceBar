@@ -22,10 +22,14 @@
 
                 {% for article in articles %}
                 <div class="article-container my-1">
+
                     <a href="{{ path('article_show', {slug: article.slug}) }}">
+                        {% if is_granted('ROLE_ADMIN_ARTICLE') %}
+                            <a href="{{ path('admin_article_edit', {id: article.id}) }}"><button class="btn btn-sm btn-info position-absolute" style="right: 15px">Edit</button></a>
+                        {% endif %}
                         {#  <img class="article-img" src="{{ asset(article.imagePath) }}"> now we use custom method to get url to our uploaded images also @see liip_imagine.yaml to see imagine_filter config#}
                         {#  before filesystem <img class="article-img" src="{{ uploaded_asset(article.imagePath)|imagine_filter('squared_thumbnail_small') }}"> #}
-                        <img class="article-img" src="{{ article.imagePath|imagine_filter('squared_thumbnail_small') }}">
+                        <img class="article-img w-20" src="{{ article.imagePath|imagine_filter('squared_thumbnail_small') }}">
                         <div class="article-title d-inline-block pl-3 align-middle">
                             <span>{{ article.title }}</span>
                             <small>({{ article.nonDeletedComments|length }} comments)</small>
