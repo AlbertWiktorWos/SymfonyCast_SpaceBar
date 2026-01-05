@@ -192,31 +192,41 @@ class ArticleReferenceAdminController extends BaseController
         $this->denyAccessUnlessGranted('MANAGE', $article);
 
         /** old way
-             * We're used to returning a Response object or a JsonResponse object where we already have the response as a string or array.
-             * But if we want to stream something to the user without reading it all into memory, we need a special class called StreamedResponse.
-             *
-             * When response is ready object use the callback function that we passed into this constructor:
-             * We added an use statement with $reference and $uploaderHelper into the callback's scope so we can use them inside
-            $response = new StreamedResponse(function() use ($reference, $uploaderHelper) {
-                //To send a file stream to the user, it looks a little strange. Start with $outputStream set to fopen('php://output') and wb.
-                $outputStream = fopen('php://output', 'wb');
-                $fileStream = $uploaderHelper->readStream($reference->getFilePath(), false);
-                stream_copy_to_stream($fileStream, $outputStream);
-            });
+         * We're used to returning a Response object or a JsonResponse object where we already have the response as a string or array.
+         * But if we want to stream something to the user without reading it all into memory, we need a special class called StreamedResponse.
+         *
+         * When response is ready object use the callback function that we passed into this constructor:
+         * We added an use statement with $reference and $uploaderHelper into the callback's scope so we can use them inside
+        $response = new StreamedResponse(function() use ($reference, $uploaderHelper) {
+        //To send a file stream to the user, it looks a little strange. Start with $outputStream set to fopen('php://output') and wb.
+        $outputStream = fopen('php://output', 'wb');
+        $fileStream = $uploaderHelper->readStream($reference->getFilePath(), false);
+        stream_copy_to_stream($fileStream, $outputStream);
+        });
 
-             * additionally we set Content-Type to handle the content (we dont want to show user something like "AASVAEAWDAWDA??DASAXASS_1231D:ADAWDAWD!211dawa")
-             * To avoid it we use HeaderUtils::makeDisposition(). For the first argument, we'll tell it whether we want the user to
-             * download the file or open it in the browser by passing HeaderUtils::DISPOSITION_ATTACHMENT or DISPOSITION_INLINE.
-            $response->headers->set('Content-Type', $reference->getMimeType());
-            $disposition = HeaderUtils::makeDisposition(
-                HeaderUtils::DISPOSITION_ATTACHMENT,
-                $reference->getOrginalFilename()
-            // If original filename is not in ASCII characters, add a 3rd argument to HeaderUtils::makeDisposition to provide a "fallback" filename.
-            );
-            $response->headers->set('Content-Disposition', $disposition);
+         * additionally we set Content-Type to handle the content (we dont want to show user something like "AASVAEAWDAWDA??DASAXASS_1231D:ADAWDAWD!211dawa")
+         * To avoid it we use HeaderUtils::makeDisposition(). For the first argument, we'll tell it whether we want the user to
+         * download the file or open it in the browser by passing HeaderUtils::DISPOSITION_ATTACHMENT or DISPOSITION_INLINE.
+        $response->headers->set('Content-Type', $reference->getMimeType());
+        $disposition = HeaderUtils::makeDisposition(
+        HeaderUtils::DISPOSITION_ATTACHMENT,
+        $reference->getOrginalFilename()
+        // If original filename is not in ASCII characters, add a 3rd argument to HeaderUtils::makeDisposition to provide a "fallback" filename.
+        );
+        $response->headers->set('Content-Disposition', $disposition);
 
-            return $response;
-        */
+        return $response;
+         */
+        // we use s3 to get private files
+        $uri = $uploaderHelper->getS3PrivateFile(
+            $reference->getFilePath(),
+            $reference->getMimeType(),
+            $reference->getOriginalFilename()
+        );
+
+        if($uri){
+            return new RedirectResponse($uri);
+        }
         // see https://symfonycasts.com/screencast/symfony-uploads for real private uploads handling
         return new RedirectResponse($uploaderHelper->getPublicPath($article->getImagePath()));
     }

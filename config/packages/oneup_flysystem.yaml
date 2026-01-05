@@ -1,5 +1,10 @@
 # Read the documentation: https://github.com/1up-lab/OneupFlysystemBundle/blob/release/3.x/Resources/doc/index.md
 oneup_flysystem: #
+
+    cache:
+        psr6_app_cache:
+            psr6: #it pass a PSR6-style caching object to the adapter
+               service: cache.flysystem.psr6 #our cache service defined in cache.yaml
     adapters:
         public_uploads_adapter: #we use it to put files to the public directory
         #https://github.com/1up-lab/OneupFlysystemBundle/blob/main/doc/adapter_awss3.md
@@ -28,3 +33,8 @@ oneup_flysystem: #
         private_uploads_adapter:
             adapter: private_uploads_adapter
             alias: League\Flysystem\Filesystem
+      # our cached filesystems
+        cached_public_uploads_adapter:
+            adapter: public_uploads_adapter
+            alias: League\Flysystem\Filesystem
+            cache: psr6_app_cache

@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Controller\ArticleReferenceAdminController;
+use Aws\S3\S3Client;
 use Gedmo\Sluggable\Util\Urlizer;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\FileNotFoundException;
@@ -11,6 +12,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Asset\Context\RequestStackContext;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 
 /**
  * Helper to handle the files by uploads and fixtures
@@ -29,6 +31,8 @@ class UploaderHelper
     private $logger;
 
     private $publicAssetBaseUrl;
+    private $privateS3Bucket;
+    private $s3Client;
 
     /**
      * Dependency Injection -we need an direction to our uploads path
@@ -41,7 +45,15 @@ class UploaderHelper
      * @param FilesystemInterface $publicUploadsFilesystem -@see services.yaml filesystem for public files
      * @param FilesystemInterface $privateUploadsFilesystem  -@see services.yaml filesystem for private files
      */
-    public function __construct(FilesystemInterface $publicUploadsFilesystem /*string $uploadsPath before fileSystem*/, FilesystemInterface $privateUploadsFilesystem, RequestStackContext $requestStackContext, LoggerInterface $logger, string $uploadedAssetsBaseUrl)
+    public function __construct(
+        FilesystemInterface $publicUploadsFilesystem /*string $uploadsPath before fileSystem*/,
+        FilesystemInterface $privateUploadsFilesystem,
+        RequestStackContext $requestStackContext,
+        LoggerInterface $logger,
+        string $uploadedAssetsBaseUrl,
+        string $privateS3Bucket,
+        S3Client $s3Client
+    )
     {
         // $this->uploadsPath = $uploadsPath;
         $this->publicUploadsFilesystem = $publicUploadsFilesystem;
@@ -49,6 +61,8 @@ class UploaderHelper
         $this->requestStackContext = $requestStackContext;
         $this->logger = $logger;
         $this->publicAssetBaseUrl = $uploadedAssetsBaseUrl;
+        $this->privateS3Bucket = $privateS3Bucket;
+        $this->s3Client = $s3Client;
     }
 
     /**
@@ -193,5 +207,37 @@ class UploaderHelper
             fclose($stream);
         }
         return $newFilename;
+    }
+
+    /**
+     * Method to get the S3 presigned URL for private files
+     */
+    public function getS3PrivateFile(string $fileKey, string $mimetype, string $orginalFilename)
+    {
+        if(!$this->s3Client){
+            throw new \Exception('S3 Client is not configured.');
+        }
+
+        /*
+         * additionally we set Content-Type to handle the content (we dont want to show user something like "AASVAEAWDAWDA??DASAXASS_1231D:ADAWDAWD!211dawa")
+         * To avoid it we use HeaderUtils::makeDisposition(). For the first argument, we'll tell it whether we want the user to
+         * download the file or open it in the browser by passing HeaderUtils::DISPOSITION_ATTACHMENT or DISPOSITION_INLINE.
+         */
+        $dispotion = HeaderUtils::makeDisposition(
+            HeaderUtils::DISPOSITION_ATTACHMENT,
+            $orginalFilename
+        );
+
+        $cmd = $this->s3Client->getCommand('GetObject', [
+            'Bucket' => $this->privateS3Bucket,
+            'Key'    => $fileKey,
+            'ResponseContentType' => $mimetype,
+            'ResponseContentDisposition' => $dispotion
+        ]);
+
+        // we set how long the URL will be valid and run this cmd
+        $request = $this->s3Client->createPresignedRequest($cmd, '+30 minutes');
+
+        return (string) $request->getUri();
     }
 }

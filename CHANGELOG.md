@@ -1,4 +1,6 @@
 # Final
+## [05.01.2026]
+- Adding cache for filesystem and better handling for s3 private bucket for article references files
 ## [04.01.2026]
 - Adding more links to navigate through the app
 - Fix to admin_artifle_form.js script to better handling references images
