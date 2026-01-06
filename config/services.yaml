@@ -11,6 +11,13 @@ parameters:
     #    uploads_dir_name: 'uploads'
     # s3 url for our uploaded files
     uploads_base_url: 'http://localhost:9000/public/' #if symfony is on container use http://minio:9000/public/
+    #its only set the port but not host and scheme!
+    #        http_port: '%env(SITE_BASE_PORT)%'
+    #other way is set (..better with .env variables)
+    router.request_context.scheme: '%env(SITE_BASE_SCHEME)%'
+    router.request_context.host: '%env(SITE_BASE_HOST)%:%env(SITE_BASE_PORT)%'
+    #from symfony 5.1+ we can set the full base url like this:
+    #default_uri: %env(SITE_BASE_URL)%
 
 services:
     # default configuration for services in *this* file
@@ -63,7 +70,7 @@ services:
             -
                 version: '2006-03-01' #
                 region: "us-east-1" # default minio region
-                endpoint: 'http://localhost:9000' #configuration for our local minio container - if symfony is on container use http://minio:9000 (name of the container)
+                endpoint: '%env(AWS_S3_ENDPOINT)%' #configuration for our local minio container will be 'http://localhost:9000', http://host.docker.internal:9000 that out php container also could connect like to http://minio:9000 (name of the container)
                 use_path_style_endpoint: true
                 credentials:
                     key: '%env(AWS_S3_ACCESS_ID)%'
