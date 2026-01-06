@@ -1,2 +1,5 @@
 parameters:
     cache_adapter: 'cache.adapter.filesystem' #we use filesystem in test env (we dont need an APCU)
+services: # for default service is private and not accessible from containers - we need to make it public
+ _defaults:
+    public: true

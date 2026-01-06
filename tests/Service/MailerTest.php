@@ -61,8 +61,8 @@ class MailerTest extends KernelTestCase //we use kernel so we can extend TestCas
 
         //we use real services that we wanted to use in our mailer
         //todo Attention! in symfony 5.3 instead of self::$container we have to use static:getcontainer() (calling bootKernel() is no longer needed!)
-        $pdf = self::$container->get(Pdf::class);
-        $twig = self::$container->get(Environment::class);
+        $pdf = self::$container->get('knp_snappy.pdf');
+        $twig = self::$container->get('twig');
         $entrypointLookup = $this->createMock(EntrypointLookupInterface::class);
 
         //create new user (without adding it to database) and set some variables

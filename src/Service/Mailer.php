@@ -45,10 +45,10 @@ class Mailer
          */
         $email = (new TemplatedEmail()) //or just Email() if we dont use template
         //or we can use Address (4.4 and higer), and more addreses in array if we want to
-        // ->from('alienmailcarrier@example.com') // from which email we send the mail  //todo in future versions use Address!
+        // ->from('alienmailcarrier@example.com') // from which email we send the mail  //todo in future versions use new Address! (symfony 4.4 and higher)
         //->from(new NamedAddress('mescruu@gmail.com', 'The Space Bar'))// from which email we send the mail (now we added this in SetFromListener
         //->to($user->getEmail()) //user email - or we can use Address (4.4 and higer), and more addreses in array if we want to
-        ->to(new NamedAddress($user->getEmail(), $user->getFirstName())) //user email //todo in future versions use Address!
+        ->to(new NamedAddress($user->getEmail(), $user->getFirstName())) //user email //todo in future versions use new Address! (symfony 4.4 and higher)
         ->subject('Welcome to the Space Bar!') // subject of our email
         ->htmlTemplate('email/welcome.html.twig')
             ->context([

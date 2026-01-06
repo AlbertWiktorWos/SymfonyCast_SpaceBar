@@ -1,6 +1,9 @@
 # SymfonyCast
-Project based on SymfonyCast tutorial
-
+Project based on SymfonyCast tutorial. 
+This for learning purpose project was focused on building simple forum called The Space Bar with features like:
+posting articles, commenting, user roles, simple admin panel, searching, but the main emphasis was placed on:
+file handling (local and with s3 integration), email notifications (with mailtrap and sendgrid and simple unit tests) and pdf generation (with wkhtmltopdf).
+Additionally, this project is if fully dockerized.
 
 # Quick start
 run in command line next commands:
@@ -62,7 +65,7 @@ need to install apcu by:
 ## Environments
 set `dev` to logs everything and show exceptions
 
-set `prod` to omptimized for speed and hides exception messages
+set `prod` to optimized for speed and hides exception messages
 
 to set this env we need to change APP_ENV variable in .env
 
@@ -71,9 +74,9 @@ to set this env we need to change APP_ENV variable in .env
 * visit https://sendgrid.com/
 
 ####run:
-set MAILER_DSN and DEV_MAIL_RECIPIENT from .env.local.dist
-php bin/console messenger:consume -vv
+set MAILER_DSN and DEV_MAIL_RECIPIENT from .env.local (look at mailtrap or sendgrid comments in .env file)
 php bin/console app:author-weekly-report:send
+php bin/console messenger:consume -vv
 
 ## Database fast scripts
 * `symfony console doctrine:database:drop --force`

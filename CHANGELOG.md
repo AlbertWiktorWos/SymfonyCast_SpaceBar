@@ -1,5 +1,6 @@
 # Final
 ## [05.01.2026]
+- Adding nginx and php container with symfony and wkhtmltopdf installed - look at docker directory and docker-compose.yml
 - Adding cache for filesystem and better handling for s3 private bucket for article references files
 ## [04.01.2026]
 - Adding more links to navigate through the app
