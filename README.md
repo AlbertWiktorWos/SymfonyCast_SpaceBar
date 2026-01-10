@@ -1,9 +1,9 @@
 # SymfonyCast
-Project based on SymfonyCast tutorial. 
-This for learning purpose project was focused on building simple forum called The Space Bar with features like:
-posting articles, commenting, user roles, simple admin panel, searching, but the main emphasis was placed on:
-file handling (local and with s3 integration), email notifications (with mailtrap and sendgrid and simple unit tests) and pdf generation (with wkhtmltopdf).
-Additionally, this project is if fully dockerized.
+Project based on SymfonyCast tutorial.
+This learning-focused project involved building a simple forum called The Space Bar.
+It included features such as article posting, commenting, user roles, a basic admin panel, and search functionality.
+The main emphasis was on file handling (local storage and Amazon S3 integration), email notifications (Mailtrap and SendGrid, including basic unit tests), and PDF generation using wkhtmltopdf.
+Additionally, the project is fully Dockerized.
 
 # Quick start
 run in command line next commands:
