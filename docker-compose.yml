@@ -27,6 +27,7 @@ services:
     depends_on:
       - database
       - minio
+      - rabbitmq
 
   nginx: #we need to add in routing.yaml http_port: '%env(SITE_BASE_PORT)%' to use that port in external links to our app
     image: nginx:1.25-alpine
@@ -89,6 +90,20 @@ services:
       mc anonymous set download local/public;
       exit 0;
       "
+
+  #5672 – Messenger - RabbitMQ communication:
+    #15672 – panel (http://localhost:15672
+    #login: guest / guest)
+    #PHP host: rabbitmq (service name!)
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: spacebar_rabbitmq
+    ports:
+      - "5672:5672"   # AMQP
+      - "15672:15672" # Web UI
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
 
 volumes:
   db-data:
