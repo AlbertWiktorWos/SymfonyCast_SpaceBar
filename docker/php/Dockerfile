@@ -3,7 +3,7 @@
 # =========================
 FROM php:7.4-fpm
 
-# System dependencies (wkhtmltopdf + fonts + libraries for GD + xsl (Inky requires that for "styling" in mailing) + yarn with nodejs)
+# System dependencies (wkhtmltopdf + fonts + libraries for GD + xsl (Inky requires that for "styling" in mailing) + yarn with nodejs + librabbitmq-dev (rabbitmq)
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y \
     xfonts-75dpi \
     libxslt1-dev \
     wkhtmltopdf \
+    librabbitmq-dev \
     && rm -rf /var/lib/apt/lists/*
 #a the end remove apt cache /\
 
@@ -31,6 +32,10 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
 # APCu cache
 RUN pecl install apcu \
     && docker-php-ext-enable apcu
+
+# amqp extension for RabbitMQ
+RUN pecl install amqp-1.10.0 \
+    && docker-php-ext-enable amqp
 
 # Composer (multi-stage copy)
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
